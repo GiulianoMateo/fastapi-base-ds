@@ -19,6 +19,9 @@ class Persona(BaseModel):
     mascotas: Mapped[Optional[List["Mascota"]]] = relationship(
         "Mascota", back_populates="tutor"
     )
+    vehiculos: Mapped[Optional[List["Vehiculo"]]] = relationship(
+        "Vehiculo", back_populates="tutor"
+    )
 
 
 class TipoMascota(StrEnum):
@@ -39,6 +42,26 @@ class Mascota(BaseModel):
         ForeignKey("personas.id")
     )  # Foreign key a Persona
     tutor: Mapped[Persona] = relationship("Persona", back_populates="mascotas")
+    fecha_creacion: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(UTC))
+    fecha_modificacion: Mapped[datetime] = mapped_column(
+        DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC)
+    )
+
+    @property
+    def nombre_tutor(self):
+        return self.tutor.nombre
+
+class Vehiculo(BaseModel):
+    __tablename__ = "vehiculos"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    patente: Mapped[str] = mapped_column(String, index=True)
+    marca: Mapped[str] = mapped_column(String)
+    modelo: Mapped[str] = mapped_column(String)  
+    tutor_id: Mapped[int] = mapped_column(
+        ForeignKey("personas.id")
+    )  # Foreign key a Persona
+    tutor: Mapped[Persona] = relationship("Persona", back_populates="vehiculos")
     fecha_creacion: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(UTC))
     fecha_modificacion: Mapped[datetime] = mapped_column(
         DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC)

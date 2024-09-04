@@ -10,6 +10,8 @@ from src.example import exceptions
 # https://docs.pydantic.dev/latest/concepts/fields/
 
 
+#------------PERSONA------------
+
 class PersonaBase(BaseModel):
     nombre: str
     email: EmailStr
@@ -33,6 +35,8 @@ class Persona(PersonaBase):
     # más info.: https://docs.pydantic.dev/latest/api/config/#pydantic.config.ConfigDict.from_attributes
     model_config = {"from_attributes": True}
 
+
+#------------MASCOTA------------
 
 class MascotaBase(BaseModel):
     nombre: str
@@ -59,6 +63,29 @@ class Mascota(MascotaBase):
     fecha_creacion: datetime
     fecha_modificacion: datetime
     tipo: TipoMascota
+    tutor_id: int
+    nombre_tutor: str
+
+    model_config = {"from_attributes": True}
+
+
+#------------VEHICULO-----------
+
+class VehiculoBase(BaseModel):
+    patente: str
+    marca: str
+    modelo: str
+
+class VehiculoCreate(VehiculoBase):
+    tutor_id: int
+
+class VehiculoUpdate(VehiculoBase):
+    pass
+
+class Vehiculo(VehiculoBase):
+    id: int
+    fecha_creacion: datetime
+    fecha_modificacion: datetime
     tutor_id: int
     nombre_tutor: str
 

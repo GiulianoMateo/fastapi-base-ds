@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from src.database import engine
 from src.models import BaseModel
 
@@ -22,6 +23,18 @@ async def db_creation_lifespan(app: FastAPI):
 
 
 app = FastAPI(root_path=ROOT_PATH, lifespan=db_creation_lifespan)
+
+origins = [
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # asociamos los routers a nuestra app
 app.include_router(example_router)
